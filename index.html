@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工作计划管理</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <div class="header-content">
+                <h1>工作计划管理</h1>
+                <p>管理和配置工作计划及工序流程</p>
+            </div>
+            <button class="add-btn" onclick="showAddModal()">
+                <span>+</span>
+                新增工作计划
+            </button>
+        </div>
+
+        <!-- 工作计划表格 -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>工作计划编号</th>
+                        <th>工作计划名称</th>
+                        <th>图片</th>
+                        <th>编辑</th>
+                    </tr>
+                </thead>
+                <tbody id="workPlanTable">
+                    <tr>
+                        <td colspan="4" class="empty-state">
+                            暂无工作计划，点击上方按钮添加
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 添加/编辑工作计划弹窗 -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modalTitle">新增工作计划</h2>
+                    <button class="close-btn" onclick="closeModal()">&times;</button>
+                </div>
+
+                <div class="modal-body">
+                    <!-- 错误提示 -->
+                    <div id="errorSection" class="error-section" style="display: none;">
+                        <div class="error-title">⚠️ <span id="errorTitle"></span></div>
+                        <div class="error-message" id="errorMessage"></div>
+                    </div>
+
+                    <!-- 工序配置 -->
+                    <div class="section">
+                        <h3>工序配置</h3>
+                        
+                        <!-- 钻孔工序 -->
+                        <div class="process-item">
+                            <div class="process-content">
+                                <div class="process-image">
+                                    <div class="process-img">钻孔</div>
+                                </div>
+                                <div class="process-details">
+                                    <div class="process-row">
+                                        <span class="process-name">钻孔</span>
+                                        <button class="toggle-switch" id="drillingToggle" onclick="toggleProcess('drilling')">
+                                            <div class="toggle-slider"></div>
+                                        </button>
+                                    </div>
+                                    <div class="process-row" id="drillingTime" style="display: none;">
+                                        <label>钻孔时间</label>
+                                        <div class="input-group">
+                                            <input type="number" class="param-input" min="0" step="0.1" value="5.0" 
+                                                   onchange="updateParameter('drilling', 'time', this.value)">
+                                            <span class="input-unit">s</span>
+                                        </div>
+                                    </div>
+                                    <div class="process-row" id="drillingCount" style="display: none;">
+                                        <label>钻孔次数</label>
+                                        <div class="input-group">
+                                            <input type="number" class="param-input" min="1" value="3"
+                                                   onchange="updateParameter('drilling', 'count', this.value)">
+                                            <span class="input-unit">次</span>
+                                        </div>
+                                    </div>
+                                    <div class="process-row" id="drillingPriority" style="display: none;">
+                                        <label>优先级</label>
+                                        <input type="number" class="priority-input" min="1" max="4" value="1" 
+                                               onchange="updatePriority('drilling', this.value)">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 装配工序 -->
+                        <div class="process-item">
+                            <div class="process-content">
+                                <div class="process-image">
+                                    <div class="process-img">装配</div>
+                                </div>
+                                <div class="process-details">
+                                    <div class="process-row">
+                                        <span class="process-name">装配</span>
+                                        <button class="toggle-switch" id="assemblyToggle" onclick="toggleProcess('assembly')">
+                                            <div class="toggle-slider"></div>
+                                        </button>
+                                    </div>
+                                    <div class="process-row" id="assemblyTime" style="display: none;">
+                                        <label>装配时间</label>
+                                        <div class="input-group">
+                                            <input type="number" class="param-input" min="0" step="0.1" value="10.0"
+                                                   onchange="updateParameter('assembly', 'time', this.value)">
+                                            <span class="input-unit">s</span>
+                                        </div>
+                                    </div>
+                                    <div class="process-row" id="assemblyCount" style="display: none;">
+                                        <label>装配次数</label>
+                                        <div class="input-group">
+                                            <input type="number" class="param-input" min="1" value="1"
+                                                   onchange="updateParameter('assembly', 'count', this.value)">
+                                            <span class="input-unit">次</span>
+                                        </div>
+                                    </div>
+                                    <div class="process-row" id="assemblyPriority" style="display: none;">
+                                        <label>优先级</label>
+                                        <input type="number" class="priority-input" min="1" max="4" value="2"
+                                               onchange="updatePriority('assembly', this.value)">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 称重工序 -->
+                        <div class="process-item">
+                            <div class="process-content">
+                                <div class="process-image">
+                                    <div class="process-img">称重</div>
+                                </div>
+                                <div class="process-details">
+                                    <div class="process-row">
+                                        <span class="process-name">称重</span>
+                                        <button class="toggle-switch" id="weighingToggle" onclick="toggleProcess('weighing')">
+                                            <div class="toggle-slider"></div>
+                                        </button>
+                                    </div>
+                                    <div class="process-row" id="weight" style="display: none;">
+                                        <label>设定重量</label>
+                                        <div class="input-group">
+                                            <input type="number" class="param-input" min="0" step="0.1" value="2.0"
+                                                   onchange="updateParameter('weighing', 'weight', this.value)">
+                                            <span class="input-unit">g</span>
+                                        </div>
+                                    </div>
+                                    <div class="process-row" id="weighingCount" style="display: none;">
+                                        <label>称重次数</label>
+                                        <div class="input-group">
+                                            <input type="number" class="param-input" min="1" value="1"
+                                                   onchange="updateParameter('weighing', 'count', this.value)">
+                                            <span class="input-unit">次</span>
+                                        </div>
+                                    </div>
+                                    <div class="process-row" id="weighingPriority" style="display: none;">
+                                        <label>优先级</label>
+                                        <input type="number" class="priority-input" min="1" max="4" value="3"
+                                               onchange="updatePriority('weighing', this.value)">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 喷码工序 -->
+                        <div class="process-item">
+                            <div class="process-content">
+                                <div class="process-image">
+                                    <div class="process-img">喷码</div>
+                                </div>
+                                <div class="process-details">
+                                    <div class="process-row">
+                                        <div>
+                                            <span class="process-name">喷码</span>
+                                            <span class="process-note" id="codingNote">需装配工序启用</span>
+                                        </div>
+                                        <button class="toggle-switch disabled" id="codingToggle" onclick="toggleProcess('coding')">
+                                            <div class="toggle-slider"></div>
+                                        </button>
+                                    </div>
+                                    <div class="process-row" id="codingTime" style="display: none;">
+                                        <label>喷码时间</label>
+                                        <div class="input-group">
+                                            <input type="number" class="param-input" min="0" step="0.1" value="3.0"
+                                                   onchange="updateParameter('coding', 'time', this.value)">
+                                            <span class="input-unit">s</span>
+                                        </div>
+                                    </div>
+                                    <div class="process-row" id="codingCount" style="display: none;">
+                                        <label>喷码次数</label>
+                                        <div class="input-group">
+                                            <input type="number" class="param-input" min="1" value="1"
+                                                   onchange="updateParameter('coding', 'count', this.value)">
+                                            <span class="input-unit">次</span>
+                                        </div>
+                                    </div>
+                                    <div class="process-row" id="codingPriority" style="display: none;">
+                                        <label>优先级</label>
+                                        <input type="number" class="priority-input" min="1" max="4" value="4" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 预览工作计划名称 -->
+                    <div class="section">
+                        <div class="preview-section">
+                            <h4>工作计划名称预览</h4>
+                            <div class="preview-name" id="previewName">未配置工序</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="cancel-btn" onclick="closeModal()">取消</button>
+                    <button class="save-btn" onclick="savePlan()">
+                        <span>✓</span>
+                        确认保存
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
