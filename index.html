@@ -55,6 +55,32 @@
                         <div class="error-message" id="errorMessage"></div>
                     </div>
 
+                    <!-- 零件选择模块 -->
+                    <div class="section">
+                        <div class="parts-selection">
+                            <h3>选择零件</h3>
+                            <div class="parts-row">
+                                <div class="part-group">
+                                    <label class="part-label">零件1</label>
+                                    <select id="leftPart" class="part-select" onchange="updatePartSelection('left', this.value)">
+                                        <option value="">请选择零件</option>
+                                        <option value="part1">白色杯盖</option>
+                                        <option value="part2">黑色杯盖</option>
+                                    </select>
+                                </div>
+                                <div class="part-group">
+                                    <label class="part-label">零件2</label>
+                                    <select id="rightPart" class="part-select" onchange="updatePartSelection('right', this.value)">
+                                        <option value="">请选择零件</option>
+                                        <option value="part1">红色杯体</option>
+                                        <option value="part2">黑色杯体</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 工序配置 -->
                     <div class="section">
                         <h3>工序配置</h3>
                         
